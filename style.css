@@ -14,14 +14,11 @@ div {
 
 .title {
     font-size: 2.5rem;
+    text-transform: uppercase;
 }
 
 .intro {
     margin-left: 5%;
     margin-right: 5%;
     font-size: 1.25rem;
-    text-transform: uppercase;
 }
-
-
-

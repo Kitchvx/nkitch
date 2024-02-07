@@ -1,8 +1,8 @@
-const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 let interval = null;
 
-document.querySelector(".intro").onmouseover = event => {  
+document.querySelector(".title").onmouseover = event => {  
   let iteration = 0;
   
   clearInterval(interval);
