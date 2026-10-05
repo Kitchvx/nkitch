@@ -3,7 +3,7 @@
 :root {
   --fg: var(--color-zinc-900);
   --bg: var(--color-zinc-50);
-  --accent: var(--color-violet-500);
+  --accent: var(--color-emerald-500);
   --muted: var(--color-zinc-600);
   --border: var(--color-zinc-200);
 }
@@ -12,7 +12,7 @@
   :root {
     --fg: var(--color-zinc-100);
     --bg: var(--color-zinc-950);
-    --accent: var(--color-violet-500);
+    --accent: var(--color-emerald-500);
     --muted: var(--color-zinc-400);
     --border: var(--color-zinc-800);
   }
