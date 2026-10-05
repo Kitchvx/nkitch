@@ -15,7 +15,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nathan's Portfolio",
+  title: {
+    default: "Hey! | Nathan Kitching",
+    template: "%s | Nathan Kitching",
+  },
   description: "Showcase of my, Nathan Kitching's, work and projects",
 };
 
