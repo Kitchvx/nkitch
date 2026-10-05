@@ -1,7 +1,7 @@
+import NavLink from "@/components/NavLink";
 import Link from "next/link";
 
 const links = [
-  { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/work", label: "Work" },
   { href: "/services", label: "Services" },
@@ -10,12 +10,15 @@ const links = [
 
 export default function Header() {
   return (
-    <header>
+    <header className="flex items-center justify-between px-6 max-w-5xl mx-auto py-6 border-b border-border">
+      <Link href="/" className="text-fg text-lg font-bold font-mono">
+        Nathan Kitching
+      </Link>
       <nav>
-        <ul>
+        <ul className="flex gap-6">
           {links.map((link) => (
             <li key={link.href}>
-              <Link href={link.href}>{link.label}</Link>
+              <NavLink href={link.href}>{link.label}</NavLink>
             </li>
           ))}
         </ul>
