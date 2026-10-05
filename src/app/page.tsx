@@ -1,7 +1,7 @@
-export default function Home() {
+export default function HomePage() {
   return (
-    <main>
+    <div>
       <h1>Nathan Kitching</h1>
-    </main>
+    </div>
   );
 }
