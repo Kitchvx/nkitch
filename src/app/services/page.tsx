@@ -15,15 +15,16 @@ export default function ServicesPage() {
         </h1>
         <div className="text-muted max-w-2xl space-y-4 mt-4">
           <p>
-            I offer a range of services to help individuals and small businesses
-            set up and secure their online presence. From server configuration
-            to domain management, I provide tailored solutions to meet your
-            needs.
+            I fix the setup problems that cost small businesses time and trust:
+            servers left exposed, emails landing in spam, and sites showing
+            &#34;Not secure&#34;. Each job has a clear scope, and you&#39;ll get
+            a short report explaining what was wrong and what I changed.
           </p>
           <p>
-            Whether you&apos;re looking to establish a new website, enhance your
-            security, or streamline your email communications, I can assist you
-            every step of the way.
+            All orders go through Fiverr, so your payment is protected and
+            everything stays in one place. I&#39;ll ask for delegated or
+            temporary access rather than your main passwords, and I remove my
+            access / advise on removal as soon as the job is done.
           </p>
         </div>
       </section>
