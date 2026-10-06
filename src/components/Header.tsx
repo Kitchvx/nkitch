@@ -10,7 +10,7 @@ const links = [
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between px-6 max-w-5xl mx-auto py-6 border-b border-border">
+    <header className="flex w-full items-center justify-between px-6 max-w-5xl mx-auto py-6 border-b border-border">
       <Link href="/" className="text-fg text-sm md:text-lg font-bold font-mono">
         Nathan Kitching
       </Link>

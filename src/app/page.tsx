@@ -19,16 +19,16 @@ export default function HomePage() {
           {/* (remove this comment when the blog has content) I write up what I learn along the
         way.*/}
         </p>
-        <div className="mt-6 flex gap-2 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2">
+        <div className="mt-6 flex flex-wrap gap-2">
           <Link
             href="/services"
-            className="bg-accent rounded-md px-4 py-2 font-medium text-bg hover:bg-accent/70"
+            className="bg-accent rounded-md px-4 py-2 font-medium text-bg focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 hover:bg-accent/90"
           >
             My Services
           </Link>
           <Link
             href="/work"
-            className="border border-border rounded-md px-4 py-2 hover:border-accent"
+            className="border border-border rounded-md px-4 py-2 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 hover:border-accent"
           >
             My Work
           </Link>
