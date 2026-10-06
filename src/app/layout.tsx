@@ -16,10 +16,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Hey! | Nathan Kitching",
+    default: "Nathan Kitching | Systems, Security & the Web",
     template: "%s | Nathan Kitching",
   },
-  description: "Showcase of my, Nathan Kitching's, work and projects",
+  description:
+    "Offering systems, security and web services for individuals and small businesses.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

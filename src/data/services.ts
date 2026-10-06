@@ -2,9 +2,9 @@ export type Service = {
   title: string;
   summary: string;
   slug: string;
-  included?: string[];
-  notIncluded?: string;
-  FiverrURL?: string;
+  included: string[];
+  notIncluded: string;
+  fiverrUrl?: string; // optional for now
 };
 
 export const services: Service[] = [
@@ -18,7 +18,7 @@ export const services: Service[] = [
       "Nginx with auto-renewing Let's Encrypt SSL",
     ],
     notIncluded:
-      "I don't provide hosting, I won't debug application code or ongoing server management.",
+      "Hosting, debugging application code, or ongoing server management.",
     slug: "server-setup-security",
   },
   {
@@ -28,24 +28,27 @@ export const services: Service[] = [
     included: [
       "Audit of existing email setup",
       "SPF, DKIM and DMARC records",
-      "Google Workspace or Microsoft 365 setup",
-      "DMARC reporting & analysis",
+      "DKIM signing enabled in Google Workspace or Microsoft 365",
+      "A plan for safely tightening DMARC to quarantine or reject",
       "Email deliverability testing",
     ],
     notIncluded:
       "Removing you from blacklists, or spam caused by email content.",
-    slug: "email-deliver",
+    slug: "email-deliverability",
   },
   {
     title: "Domain, DNS & SSL Fixes",
     summary:
       "Site showing 'Not secure', or a domain that won't point where it should? I'll find the fault and fix it.",
     included: [
-      "Domain registration and management",
       "DNS record updates and troubleshooting",
       "SSL certificate installation and configuration",
+      "Pointing domains to the correct server or service",
+      "HTTPS and www redirection",
+      "Mixed content warnings fixes",
+      "Cloudflare setup",
     ],
-    notIncluded: "Website redesigns or code development",
+    notIncluded: "Website redesigns or code development.",
     slug: "domain-fault-finding",
   },
 ];
