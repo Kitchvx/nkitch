@@ -34,7 +34,7 @@ Then open [http://localhost:3000](http://localhost:3000).
 
 ```
 src/
-├── app/          # Routes: each folder with a page.tsx is a URL
+├── app/          # Routes: each folder with a page.tsx or page.mdx is a URL
 ├── components/   # Shared components (header, footer, cards)
 └── data/         # Site content as typed data (services)
 ```
