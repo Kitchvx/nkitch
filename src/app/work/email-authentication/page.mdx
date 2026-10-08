@@ -1,0 +1,180 @@
+export const metadata = {
+  title: "Email authentication case study",
+  description:
+    "Taking nkitch.com from no DMARC policy to enforcement: SPF, DKIM and DMARC on Zoho Mail.",
+};
+
+# Locking down email on nkitch.com
+
+Taking my own domain from no DMARC policy to full enforcement.
+
+## The problem
+
+nkitch.com has sent mail through two providers. Until mid-2025 it was Ionos. A message Gmail received in June 2025 shows SPF and DKIM passing, but no DMARC result at all, because there was no DMARC record. Receiving servers had no instruction for mail that failed authentication, so anyone could send mail as nkitch.com and leave each receiver to decide what to do with it.
+
+After moving mail to Zoho, I added a DMARC record, but at `p=none`. That's monitoring only: receivers send reports, then deliver failing mail anyway. SPF ended in `~all` (soft fail) and the DKIM key was 1024-bit.
+
+```text
+v=spf1 include:zohomail.eu ~all
+v=DMARC1; p=none; rua=mailto:reports@nkitch.com; ruf=mailto:reports@nkitch.com; sp=none; adkim=s; aspf=s
+```
+
+This is where most small business domains sit. Every check says "pass", so nothing looks broken, but nothing is enforced either. Without enforcement, a scammer can send a fake invoice from your exact address and it can still reach the inbox.
+
+## What I did
+
+### 1. Checked who sends as nkitch.com
+
+Enforcing DMARC blocks any sender you've forgotten about, including your own. The aggregate reports DMARC was already collecting answer that question. Google's report for 4 September 2026 showed a single source: a Zoho IP, passing both SPF and DKIM under strict alignment. Nothing else sends as nkitch.com, so it was safe to tighten.
+
+### 2. Rotated DKIM to a 2048-bit key
+
+I generated a new key in Zoho under a new selector, `zoho2610`, and published it alongside the old one. A 2048-bit key is longer than the 255-character limit for a single TXT string, so DNS stores it as several chunks. Linode splits it automatically. To confirm it was intact, I joined the chunks back together, the way a receiving server does:
+
+```powershell
+$dkim = (Resolve-DnsName "zoho2610._domainkey.nkitch.com" -Type TXT -Server ns1.linode.com).Strings -join ""
+($dkim -replace '.*p=', '').Length   # 392 characters: a 2048-bit key
+```
+
+Once the new key verified, I retired the old `zmail` selector in Zoho and Linode. I also confirmed that the old Ionos selector is no longer published.
+
+### 3. SPF to hard fail
+
+```text
+v=spf1 include:zohomail.eu -all
+```
+
+Zoho is the only authorised sender. Anything else fails outright.
+
+### 4. DMARC from monitoring to enforcement
+
+```text
+v=DMARC1; p=quarantine; sp=reject; adkim=s; aspf=s; rua=mailto:reports@nkitch.com
+```
+
+- `p=quarantine` first, as a step towards `reject`, with reports checked in between.
+- `sp=reject` straight away. No subdomain sends mail, so mail from any subdomain, such as `billing.nkitch.com`, is blocked immediately.
+- Strict alignment kept, since the reports showed it already passing.
+- Forensic (`ruf`) reporting dropped. Google doesn't send forensic reports, and the providers that do include message content.
+
+### 5. Quarantine to reject
+
+The reports and test messages to Gmail and Microsoft 365 all showed one sender, fully aligned, so I moved to `reject` the same evening:
+
+```text
+v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s; rua=mailto:reports@nkitch.com
+```
+
+For a business with several senders (a CRM, a newsletter tool, a website form), I'd hold at `quarantine` for a couple of weeks and work through the reports first.
+
+## Proof
+
+DNS records before and after, queried from public DNS and from Linode's authoritative nameserver:
+
+Before:
+![PowerShell output showing nkitch.com's SPF record ending in ~all, DMARC at p=none and a 1024-bit DKIM key under the zmail selector](/work/email-authentication/before-dns-records.png)
+
+After:
+![PowerShell output showing SPF ending in -all, DMARC at p=reject with sp=reject, and a 392-character DKIM key, identical on 1.1.1.1 and ns1.linode.com](/work/email-authentication/after-dns-records.png)
+
+Gmail's verdict on a message sent in June 2025, while mail was on Ionos:
+
+```text
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@nkitch.com header.s=s1-ionos header.b=wCiIU2n9;
+       spf=pass (google.com: domain of nathan@nkitch.com designates
+        212.227.126.187 as permitted sender) smtp.mailfrom=nathan@nkitch.com
+```
+
+No `dmarc=` result, because there was no policy to evaluate.
+
+Gmail's verdict after the changes (quarantine):
+
+```text
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@nkitch.com header.s=zoho2610 header.b=DK7x++cc;
+       spf=pass (google.com: domain of nathan@nkitch.com designates
+        136.143.169.50 as permitted sender) smtp.mailfrom=nathan@nkitch.com;
+       dmarc=pass (p=QUARANTINE sp=REJECT dis=NONE) header.from=nkitch.com
+```
+
+And Microsoft 365's, independently (quarantine):
+
+```text
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 136.143.169.50) smtp.rcpttodomain=[my-secondary-domain].co.uk smtp.mailfrom=nkitch.com;
+ dmarc=pass (p=quarantine sp=reject pct=100) action=none
+ header.from=nkitch.com; dkim=pass (signature was verified)
+ header.d=nkitch.com; arc=pass (0 oda=0 ltdi=0 93)
+...
+Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP is
+ 136.143.169.50) smtp.mailfrom=nkitch.com; dkim=pass (signature was verified)
+ header.d=nkitch.com;dmarc=pass action=none
+ header.from=nkitch.com;compauth=pass reason=100
+```
+
+Microsoft records the policy in `ARC-Authentication-Results`. Its `Authentication-Results` line only gives the verdict.
+
+Gmail's verdict after `p=reject`:
+
+```text
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@nkitch.com header.s=zoho2610 header.b=bn4vZnAA;
+       spf=pass (google.com: domain of nathan@nkitch.com designates
+        136.143.169.50 as permitted sender) smtp.mailfrom=nathan@nkitch.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=nkitch.com
+```
+
+And again, Microsoft 365's verdict after `p=reject`:
+
+```text
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 136.143.169.50) smtp.rcpttodomain=[my-secondary-domain].co.uk smtp.mailfrom=nkitch.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nkitch.com;
+ dkim=pass (signature was verified) header.d=nkitch.com; arc=pass (0 oda=0
+ ltdi=0 93)
+```
+
+Microsoft records the policy in `ARC-Authentication-Results`. Its `Authentication-Results` line is unchanged from the quarantine stage, so I've left it out.
+
+## Outcome
+
+Gmail and Microsoft 365 both pass SPF, DKIM and DMARC for nkitch.com, under strict alignment and with a 2048-bit key. Mail that fails authentication, from nkitch.com or any of its subdomains, is now rejected.
+
+## Check your own domain
+
+Here is a copy-paste of the commands I ran in both screenshots:
+
+Before screenshot:
+
+```powershell
+$d = "yourdomain.com"
+$sel = "selector"
+Resolve-DnsName $d -Type MX -Server 1.1.1.1
+Resolve-DnsName "_dmarc.$d" -Type TXT -Server 1.1.1.1 | Select-Object -ExpandProperty Strings
+Resolve-DnsName "$sel._domainkey.$d" -Type TXT -Server 1.1.1.1 | Select-Object -ExpandProperty Strings
+Resolve-DnsName $d -Type TXT -Server 1.1.1.1 | Select-Object -ExpandProperty Strings
+```
+
+After screenshot:
+
+```powershell
+$d = "yourdomain.com"
+$sel = "selector"
+$yourns = "your.ns.com"
+foreach ($ns in "1.1.1.1", "$yourns") {
+    "--- $ns ---"
+    (Resolve-DnsName $d -Type TXT -Server $ns).Strings | Where-Object { $_ -like "v=spf1*" }
+    (Resolve-DnsName "_dmarc.$d" -Type TXT -Server $ns).Strings
+    $dkim = (Resolve-DnsName "$sel._domainkey.$d" -Type TXT -Server $ns).Strings -join ""
+    "DKIM key chars: " + ($dkim -replace '.*p=', '').Length
+}
+```
+
+You can find your nameserver with:
+
+```powershell
+Resolve-DnsName yourdomain.com -Type NS
+```
+
+Your DKIM selector is the `s=` value in the DKIM-Signature header of any email you've sent.
