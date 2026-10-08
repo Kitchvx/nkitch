@@ -1,3 +1,5 @@
+import { services } from "@/data/services";
+
 export const metadata = {
   title: "Services",
   description: "Overview of the services I offer.",
@@ -26,8 +28,42 @@ export default function ServicesPage() {
             temporary access rather than your main passwords, and I remove my
             access / advise on removal as soon as the job is done.
           </p>
+          <p className="font-semibold">
+            Tiers of service are available on Fiverr, make sure you check out
+            the options when you order.
+          </p>
         </div>
       </section>
+
+      {services.map((service) => (
+        <section
+          key={service.slug}
+          id={service.slug}
+          className="border-t border-border py-12"
+        >
+          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl mb-2">
+            {service.title}
+          </h2>
+
+          <p className="mb-4">{service.summary}</p>
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">
+            What&#39;s included
+          </h3>
+          <ul className="list-disc list-inside mb-4">
+            {service.included.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">
+            What&#39;s not included
+          </h3>
+          <ul className="list-disc list-inside mb-4">
+            {service.notIncluded.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+      ))}
     </div>
   );
 }

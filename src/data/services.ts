@@ -3,7 +3,7 @@ export type Service = {
   summary: string;
   slug: string;
   included: string[];
-  notIncluded: string;
+  notIncluded: string[];
   fiverrUrl?: string; // optional for now
 };
 
@@ -17,8 +17,11 @@ export const services: Service[] = [
       "UFW firewall and fail2ban",
       "Nginx with auto-renewing Let's Encrypt SSL",
     ],
-    notIncluded:
-      "Hosting, debugging application code, or ongoing server management.",
+    notIncluded: [
+      "Hosting",
+      "Debugging application code",
+      "Ongoing server management",
+    ],
     slug: "server-setup-security",
   },
   {
@@ -32,8 +35,10 @@ export const services: Service[] = [
       "A plan for safely tightening DMARC to quarantine or reject",
       "Email deliverability testing",
     ],
-    notIncluded:
-      "Removing you from blacklists, or spam caused by email content.",
+    notIncluded: [
+      "Removing you from blacklists",
+      "Spam caused by email content.",
+    ],
     slug: "email-deliverability",
   },
   {
@@ -48,7 +53,11 @@ export const services: Service[] = [
       "Mixed content warnings fixes",
       "Cloudflare setup",
     ],
-    notIncluded: "Website redesigns or code development.",
+    notIncluded: [
+      "Website redesigns",
+      "Ongoing domain or SSL management",
+      "Code development.",
+    ],
     slug: "domain-fault-finding",
   },
 ];
