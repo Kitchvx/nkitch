@@ -31,3 +31,15 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+
+pre[data-language]::before {
+  content: attr(data-language);
+  display: block;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  color: var(--color-zinc-400);
+}
+
+pre[data-language="text"]::before {
+  display: none;
+}
