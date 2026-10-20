@@ -1,4 +1,4 @@
-export type CaseStudy = {
+export type Study = {
   title: string;
   summary: string;
   slug: string;
@@ -6,7 +6,7 @@ export type CaseStudy = {
   tags: string[];
 };
 
-export const casestudy: CaseStudy[] = [
+export const caseStudies: Study[] = [
   {
     title: "Email Authentication",
     summary:

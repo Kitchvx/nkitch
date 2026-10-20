@@ -1,5 +1,5 @@
 import Card from "@/components/Card";
-import { casestudy } from "@/data/work";
+import { caseStudies } from "@/data/work";
 
 export const metadata = {
   title: "Work",
@@ -17,12 +17,12 @@ export default function WorkPage() {
           Case Studies
         </h1>
         <div className="grid gap-6 md:grid-cols-3">
-          {casestudy.map((CaseStudy) => (
+          {caseStudies.map((study) => (
             <Card
-              key={CaseStudy.slug}
-              title={CaseStudy.title}
-              summary={CaseStudy.summary}
-              href={`/work/${CaseStudy.slug}`}
+              key={study.slug}
+              title={study.title}
+              summary={study.summary}
+              href={`/work/${study.slug}`}
             />
           ))}
         </div>
