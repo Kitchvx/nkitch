@@ -1,5 +1,5 @@
 import { services } from "@/data/services";
-import ServiceCard from "@/components/ServiceCard";
+import Card from "@/components/Card";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -16,7 +16,7 @@ export default function HomePage() {
           I&apos;m a UK-based engineer working across Linux, networking,
           security and the web. I set up and secure servers, domains and
           professional emails for individuals and small businesses.
-          {/* (remove this comment when the blog has content) I write up what I learn along the
+          {/* (remove this comment when the blog has content) THE REST OF THE TEXT >>> I write up what I learn along the
         way.*/}
         </p>
         <div className="mt-6 flex flex-wrap gap-2">
@@ -41,7 +41,12 @@ export default function HomePage() {
         </h2>
         <div className="grid gap-6 md:grid-cols-3">
           {services.map((service) => (
-            <ServiceCard key={service.slug} service={service} />
+            <Card
+              key={service.slug}
+              title={service.title}
+              summary={service.summary}
+              href={`/services#${service.slug}`}
+            />
           ))}
         </div>
       </section>
