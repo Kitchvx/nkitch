@@ -22,7 +22,7 @@ export default function WorkPage() {
               key={CaseStudy.slug}
               title={CaseStudy.title}
               summary={CaseStudy.summary}
-              href={`/work#${CaseStudy.slug}`}
+              href={`/work/${CaseStudy.slug}`}
             />
           ))}
         </div>
