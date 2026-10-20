@@ -29,6 +29,7 @@ Then open [http://localhost:3000](http://localhost:3000).
 | `npm run dev` | Starts the development server with hot reload |
 | `npm run build` | Creates a production build |
 | `npm run lint` | Runs ESLint |
+| `.\git-it.ps1` | Runs a PowerShell command (Thanks Claude) because I'm lazy |
 
 ## Structure
 
@@ -36,7 +37,7 @@ Then open [http://localhost:3000](http://localhost:3000).
 src/
 ├── app/          # Routes: each folder with a page.tsx or page.mdx is a URL
 ├── components/   # Shared components (header, footer, cards)
-└── data/         # Site content as typed data (services)
+└── data/         # Site content as typed data (services.ts, work.ts)
 ```
 
 ## Licence
