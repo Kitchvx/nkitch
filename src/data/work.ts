@@ -10,7 +10,7 @@ export const caseStudies: study[] = [
   {
     title: "Email Authentication",
     summary:
-      "Taking nkitch.com from no DMARC policy to enforcement: SPF, DKIM and DMARC on Zoho Mail.",
+      "Took nkitch.com from no DMARC record to p=reject, with a 2048-bit DKIM key and SPF hard fail, verified in Gmail and Microsoft 365.",
     slug: "email-authentication",
     date: "2026-10-08",
     tags: ["Email", "DNS", "SPF", "DKIM", "DMARC"],

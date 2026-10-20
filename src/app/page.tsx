@@ -45,6 +45,7 @@ export default function HomePage() {
               key={service.slug}
               title={service.title}
               summary={service.summary}
+              tags={service.tags}
               href={`/services#${service.slug}`}
             />
           ))}
