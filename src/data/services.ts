@@ -2,7 +2,6 @@ export type Service = {
   title: string;
   summary: string;
   slug: string;
-  tags: string[];
   included: string[];
   notIncluded: string[];
   fiverrUrl?: string; // optional for now
@@ -24,7 +23,6 @@ export const services: Service[] = [
       "Ongoing server management",
     ],
     slug: "server-setup-security",
-    tags: [],
   },
   {
     title: "Email Deliverability",
@@ -42,7 +40,6 @@ export const services: Service[] = [
       "Spam caused by email content.",
     ],
     slug: "email-deliverability",
-    tags: [],
   },
   {
     title: "Domain, DNS & SSL Fixes",
@@ -62,6 +59,5 @@ export const services: Service[] = [
       "Code development.",
     ],
     slug: "domain-fault-finding",
-    tags: [],
   },
 ];
